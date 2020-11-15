@@ -1,0 +1,33 @@
+﻿@page "/"
+<div class="row mt-5">
+    <div class="offset-md-2 col-md-3">
+        <div class="form-group">
+            <label for="moonPhaseDate">Date:</label>
+            <input type="date" class="form-control" id="moonPhaseDate" @bind="MoonPhaseDate">
+        </div>
+    </div>
+    <div class="offset-md-2 col-md-3">
+        <div class="form-group">
+            <label for="hemisphere">Hemisphere:</label>
+            <select class="form-control" id="hemisphere" @bind="Hemisphere">
+                <option value="1">Northern</option>
+                <option value="2">Southern</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="offset-md-2 col-md-8">
+        <div class="text-center p-5 text-white">
+            <div class="mt-5 pt-5">
+                <span style="font-size:10rem">@result.Emoji</span>
+            </div>
+            <div class="h1 mt-3">@result.Name</div>
+            <div class="h4 mt-5 text-center">
+                The Moon for @result.Moment.ToString("MMM dd yyyy") is @Math.Floor(result.DaysIntoCycle) days <br />
+                into the cycle, and is showing as "@(result.Name)" <br />
+                with @Math.Floor(result.Visibility)% visibility, and a face of @result.Emoji from the @result.Hemisphere hemisphere.
+            </div>
+        </div>
+    </div>
+</div>
