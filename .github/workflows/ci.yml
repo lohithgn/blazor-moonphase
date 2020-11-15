@@ -1,4 +1,4 @@
-name: .NET Core
+name: BuildAndDeploy
 
 on:
   workflow_dispatch:
