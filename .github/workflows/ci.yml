@@ -26,12 +26,24 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish --configuration Release --output publish --no-restore
+      run: dotnet publish --configuration Release --output published_app --no-restore
+
+    - name: Publish artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: blazormoonphase_app
+        path: published_app      
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    steps: 
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: blazormoonphase_app
+          path: ./published_app
+
       - name: Set up Node
         uses: actions/setup-node@v2-beta
         with:
@@ -41,4 +53,4 @@ jobs:
         run: npm install -g surge        
 
       - name: Deploy application
-        run: surge ./publish ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+        run: surge ./published_app ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
