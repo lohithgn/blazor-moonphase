@@ -9,9 +9,8 @@ on:
 
 jobs:
   build:
-
+    if: github.event_name == 'push' && contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
 
@@ -29,13 +28,17 @@ jobs:
     - name: Publish
       run: dotnet publish --configuration Release --output publish --no-restore
 
-    - name: Set up Node
-      uses: actions/setup-node@v2-beta
-      with:
-        node-version: '12'      
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'      
 
-    - name: Install Surge CLI
-      run: npm install -g surge        
+      - name: Install Surge CLI
+        run: npm install -g surge        
 
-    - name: Deploy application
-      run: surge ./publish ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+      - name: Deploy application
+        run: surge ./publish ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
